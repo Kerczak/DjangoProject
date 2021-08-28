@@ -13,16 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
-
-from viewer.views import hello
-from viewer.models import Genre, Movie
 
 from django.contrib import admin
 from django.urls import path
 
-from viewer.views import hello
+from viewer import views
 from viewer.models import Genre, Movie
 
 admin.site.register(Genre)
@@ -30,5 +25,5 @@ admin.site.register(Movie)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello', hello)
+    path('', views.movies)
 ]
