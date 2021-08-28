@@ -19,6 +19,12 @@ from django.urls import path
 from viewer.views import hello
 from viewer.models import Genre, Movie
 
+from django.contrib import admin
+from django.urls import path
+
+from viewer.views import hello
+from viewer.models import Genre, Movie
+
 admin.site.register(Genre)
 admin.site.register(Movie)
 
