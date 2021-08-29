@@ -1,10 +1,15 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import ListView, FormView
 
 from viewer.models import Movie
-# Create your views here.
+from viewer.templates.forms import MovieForm
 
 
-class MoviesView(TemplateView):
+class MoviesView(ListView):
     template_name = 'movies.html'
-    extra_context = {'movies': Movie.objects.all()}
+    model = Movie
+
+
+class MovieCreateView(FormView):
+    template_name = 'form.html'
+    form_class = MovieForm
