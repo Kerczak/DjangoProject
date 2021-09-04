@@ -19,9 +19,14 @@ class MovieForm(ModelForm):
     rating = IntegerField(min_value=1, max_value=10)  # input type: number, min: 1, max: 10
     released = PastMonthField()  # input type: date
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
     def clean_description(self):
         initial = self.cleaned_data['description']  # pobranie wartości pola description
-        sentences = re.sub(r'\s*', '.', initial).split('.')  # podział tekstu na części od kropki do kropki
+        sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')  # podział tekstu na części od kropki do kropki
         return '. '.join(sentence.capitalize() for sentence in sentences)  # zamiana na wielką literę pierwszej litery każdego zdania, dodanie kropki, powtórzenie operacji dla kolejnego zdania
 
 
