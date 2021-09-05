@@ -9,6 +9,14 @@ from viewer.templates.forms import MovieForm
 from logging import getLogger
 LOGGER = getLogger()
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+
+
+class SubmittableLoginView(LoginView):
+    template_name = 'form.html'
+
 
 def generate_demo(request):
     our_get = request.GET.get('name', '')
@@ -21,13 +29,13 @@ def generate_demo(request):
     )
 
 
-class MoviesView(ListView):
+class MoviesView(LoginRequiredMixin, ListView):
     template_name = 'movies.html'
     model = Movie
 
 
-class MovieCreateView(CreateView):
-    template_name = 'form.html'
+class MovieCreateView(LoginRequiredMixin, CreateView):
+    template_name = 'formAddEditMovie.html'
     form_class = MovieForm
     # adres pobrany z URLs, na który zostaniemy przekierowani
     # gdy walidacja się powiedzie (movie_create pochodzi z name!):
@@ -42,8 +50,8 @@ class MovieCreateView(CreateView):
         return super().form_invalid(form)
 
 
-class MovieUpdateView(UpdateView):
-    template_name = 'form.html'
+class MovieUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'formAddEditMovie.html'
     form_class = MovieForm
     # adres pobrany z URLs na który zostaniemy przekierowani
     # gdy aktualizacja się powiedzie (index pochodzi z name!)
@@ -59,7 +67,7 @@ class MovieUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class MovieDeleteView(DeleteView):
+class MovieDeleteView(LoginRequiredMixin, DeleteView):
     # Nazwa szablonu wraz z rozszerzeniem którą pobieramy z folderu templates
     template_name = 'delete_movie.html'
     success_url = reverse_lazy('index')
