@@ -10,7 +10,7 @@ from logging import getLogger
 LOGGER = getLogger()
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 
 
@@ -29,17 +29,18 @@ def generate_demo(request):
     )
 
 
-class MoviesView(LoginRequiredMixin, ListView):
+class MoviesView(ListView):
     template_name = 'movies.html'
     model = Movie
 
 
-class MovieCreateView(LoginRequiredMixin, CreateView):
+class MovieCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'formAddEditMovie.html'
     form_class = MovieForm
     # adres pobrany z URLs, na który zostaniemy przekierowani
     # gdy walidacja się powiedzie (movie_create pochodzi z name!):
     success_url = reverse_lazy('movie_create')
+    permission_required = 'viewer.add_movie'
 
 
     # co ma się dziać, gdy formularz nie przejdzie walidacji:
@@ -50,7 +51,7 @@ class MovieCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class MovieUpdateView(LoginRequiredMixin, UpdateView):
+class MovieUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'formAddEditMovie.html'
     form_class = MovieForm
     # adres pobrany z URLs na który zostaniemy przekierowani
@@ -58,6 +59,7 @@ class MovieUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('index')
     # Nazwa encji, z której będziemy kasować rekord
     model = Movie
+    permission_required = 'viewer.change_movie'
 
     # co ma się dziać, gdy formularz nie przejdzie walidacji:
     def form_invalid(self, form):
@@ -67,9 +69,10 @@ class MovieUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class MovieDeleteView(LoginRequiredMixin, DeleteView):
+class MovieDeleteView(PermissionRequiredMixin, DeleteView):
     # Nazwa szablonu wraz z rozszerzeniem którą pobieramy z folderu templates
     template_name = 'delete_movie.html'
     success_url = reverse_lazy('index')
     # Nazwa encji, z której będziemy kasować rekord
     model = Movie
+    permission_required = 'viewer.delete_movie'

@@ -5,8 +5,12 @@ from django.db.models import (Model,
 
 # Create your models here.
 
+
 class Genre(Model):
     name = CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
 
 
 class Movie(Model):
@@ -16,3 +20,6 @@ class Movie(Model):
     released = DateField()
     description = TextField()
     created = DateTimeField(auto_now_add=True)  # zawsze bieżący czas
+
+    def __str__(self):
+        return self.title
