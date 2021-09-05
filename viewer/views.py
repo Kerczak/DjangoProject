@@ -1,11 +1,24 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.shortcuts import render
+import datetime
 
 from viewer.models import Movie
 from viewer.templates.forms import MovieForm
 
 from logging import getLogger
 LOGGER = getLogger()
+
+
+def generate_demo(request):
+    our_get = request.GET.get('name', '')
+    return render(
+        request, template_name='demo.html',
+        context={'our_get': our_get,
+                 'list': ['pierwszy', 'drugi', 'trzeci', 'czwarty'],
+                 'nasza_data': datetime.datetime.now()
+                 }
+    )
 
 
 class MoviesView(ListView):

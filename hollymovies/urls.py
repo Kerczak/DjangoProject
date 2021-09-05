@@ -16,9 +16,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import render
 
 from viewer.views import MoviesView, MovieCreateView, MovieUpdateView, MovieDeleteView
 from viewer.models import Genre, Movie
+
+from viewer.views import generate_demo
 
 admin.site.register(Genre)
 admin.site.register(Movie)
@@ -26,6 +29,7 @@ admin.site.register(Movie)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', MoviesView.as_view(), name='index'),
+    path('demo', generate_demo, name='demo'),
     path('movie/create', MovieCreateView.as_view(), name='movie_create'),
     path('movie/update/<pk>', MovieUpdateView.as_view(), name='movie_update'),
     path('movie/delete/<pk>', MovieDeleteView.as_view(), name='movie_delete')
